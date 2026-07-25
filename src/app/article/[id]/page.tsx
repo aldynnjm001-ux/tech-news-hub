@@ -37,12 +37,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   
-  const article = await prisma.article.findUnique({
-    where: { id: resolvedParams.id }
-  });
+  let article = null;
+  try {
+    article = await prisma.article.findUnique({
+      where: { id: resolvedParams.id }
+    });
+  } catch (e) {
+    console.error("Database connection failed", e);
+  }
 
   if (!article) {
-    return <div className="container" style={{ padding: "4rem 0" }}><h2>الخبر غير موجود</h2></div>;
+    return <div className="container" style={{ padding: "4rem 0" }}><h2>الخبر غير موجود أو قاعدة البيانات غير متصلة</h2></div>;
   }
 
   const relatedArticles = await prisma.article.findMany({

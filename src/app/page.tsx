@@ -33,17 +33,27 @@ export default async function Home() {
     ? { category: { in: preferredCategories } } 
     : {};
 
-  const [articles, trending] = await Promise.all([
-    prisma.article.findMany({
-      where: whereClause,
-      orderBy: { date: 'desc' },
-      take: 12,
-    }),
-    prisma.article.findMany({
-      orderBy: { viewCount: 'desc' },
-      take: 5,
-    }),
-  ]);
+  let articles: any[] = [];
+  let trending: any[] = [];
+
+  try {
+    const results = await Promise.all([
+      prisma.article.findMany({
+        where: whereClause,
+        orderBy: { date: 'desc' },
+        take: 12,
+      }),
+      prisma.article.findMany({
+        orderBy: { viewCount: 'desc' },
+        take: 5,
+      }),
+    ]);
+    articles = results[0];
+    trending = results[1];
+  } catch (error) {
+    console.error("Database connection failed. Ensure DATABASE_URL is set in Vercel.", error);
+    // Fallback to empty arrays so the page loads and shows "No news yet"
+  }
 
   return (
     <div className="home-page">

@@ -11,10 +11,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const slug = resolvedParams.slug as keyof typeof categories;
   const categoryName = categories[slug];
   
-  const articles = await prisma.article.findMany({
-    where: { category: slug },
-    orderBy: { date: 'desc' },
-  });
+  let articles: any[] = [];
+  try {
+    articles = await prisma.article.findMany({
+      where: { category: slug },
+      orderBy: { date: 'desc' },
+    });
+  } catch (e) {
+    console.error("Database connection failed", e);
+  }
 
   if (!categoryName) {
     return <div className="container" style={{ padding: "4rem 0" }}><h2>القسم غير موجود</h2></div>;
