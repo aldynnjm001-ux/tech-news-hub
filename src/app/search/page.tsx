@@ -2,6 +2,7 @@ import { categories } from "@/lib/data";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
+import { Article } from "@prisma/client";
 
 // This becomes a server component
 export default async function SearchPage({
@@ -12,7 +13,7 @@ export default async function SearchPage({
   const resolvedParams = await searchParams;
   const query = typeof resolvedParams.q === 'string' ? resolvedParams.q : '';
   
-  let searchResults = [];
+  let searchResults: Article[] = [];
 
   if (query) {
     searchResults = await prisma.article.findMany({
