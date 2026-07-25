@@ -12,7 +12,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap; /* Allows safe wrap if very small */
+  flex-wrap: nowrap;
+  gap: 1.5rem;
+}
+
+.navbar-brand {
+  flex-shrink: 0;
 }
 
 .navbar-brand h1 {
@@ -28,6 +33,14 @@
   display: flex;
   gap: 1.5rem;
   align-items: center;
+  overflow-x: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.navbar-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-link {
@@ -57,6 +70,7 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .icon-btn {
