@@ -15,14 +15,33 @@ const parser = new Parser({
 // Using Google News RSS (Very reliable and avoids 404 errors)
 // URLs must be properly encoded to prevent "unescaped characters" error in Node.js
 const RSS_SOURCES = [
+  // Arabic tech sources (general)
   { url: 'https://aitnews.com/feed/', name: 'البوابة العربية للأخبار التقنية' },
   { url: 'https://www.tech-wd.com/wd/feed/', name: 'عالم التقنية' },
+  // AI
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('ذكاء اصطناعي ChatGPT Gemini نموذج لغوي')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - ذكاء اصطناعي', forcedCategory: 'ai' },
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('artificial intelligence AI robot OpenAI')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - AI English', forcedCategory: 'ai' },
+  // Cybersecurity
   { url: `https://news.google.com/rss/search?q=${encodeURIComponent('الأمن السيبراني اختراق ثغرات')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - أمن سيبراني', forcedCategory: 'cybersecurity' },
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('قراصنة هجوم إلكتروني تسريب بيانات برامج خبيثة')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - هجمات إلكترونية', forcedCategory: 'cybersecurity' },
+  // Space
   { url: `https://news.google.com/rss/search?q=${encodeURIComponent('الفضاء ناسا مركبة فضائية اكتشاف علمي')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - فضاء وعلوم', forcedCategory: 'space' },
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('كوكب مجرة تلسكوب رائد فضاء SpaceX')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - فضاء 2', forcedCategory: 'space' },
+  // Crypto
   { url: `https://news.google.com/rss/search?q=${encodeURIComponent('بيتكوين عملات رقمية بلوكتشين Web3')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - عملات رقمية', forcedCategory: 'crypto' },
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('إيثريوم سوق العملات الرقمية تداول')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - عملات رقمية 2', forcedCategory: 'crypto' },
+  // Gaming
   { url: `https://news.google.com/rss/search?q=${encodeURIComponent('ألعاب PlayStation Xbox Nintendo')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - ألعاب', forcedCategory: 'gaming' },
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('لعبة جديدة إصدار ألعاب فيديو Gaming PC')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - ألعاب 2', forcedCategory: 'gaming' },
+  // Hardware
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('هاتف ذكي معالج شاشة لابتوب سامسونج أبل')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - أجهزة', forcedCategory: 'hardware' },
+  // Software
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('تطبيق برنامج تحديث إصدار جديد تقني')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - برمجيات', forcedCategory: 'software' },
+  // Global Tech
   { url: `https://news.google.com/rss/search?q=${encodeURIComponent('جوجل أبل ميتا مايكروسوفت تقنية عالمية')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - تقنيات عالمية', forcedCategory: 'global' },
+  { url: `https://news.google.com/rss/search?q=${encodeURIComponent('أمازون تسلا تيك توك شركة تكنولوجيا')}&hl=ar&gl=SA&ceid=SA:ar`, name: 'جوجل - شركات عالمية', forcedCategory: 'global' },
 ];
+
 
 function determineCategory(title: string, excerpt: string): string {
   const text = (title + " " + excerpt).toLowerCase();
