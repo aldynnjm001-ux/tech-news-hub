@@ -48,16 +48,83 @@ export async function GET(request: Request) {
     const newArticles = [];
     const errors = [];
 
-    const PLACEHOLDERS: Record<string, string> = {
-      ai: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      cybersecurity: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      hardware: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      software: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      space: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      crypto: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      gaming: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      global: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    // Multiple varied images per category to avoid repetition
+    const PLACEHOLDER_POOLS: Record<string, string[]> = {
+      ai: [
+        'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+        'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80',
+        'https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&q=80',
+        'https://images.unsplash.com/photo-1716855650939-a9498b9e3d86?w=800&q=80',
+        'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80',
+        'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?w=800&q=80',
+      ],
+      cybersecurity: [
+        'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80',
+        'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80',
+        'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=800&q=80',
+        'https://images.unsplash.com/photo-1510511459019-5dda7724fd87?w=800&q=80',
+        'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&q=80',
+        'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80',
+      ],
+      hardware: [
+        'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&q=80',
+        'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
+        'https://images.unsplash.com/photo-1591238372338-f1c049bdf4db?w=800&q=80',
+        'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&q=80',
+        'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&q=80',
+        'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=800&q=80',
+      ],
+      software: [
+        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
+        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80',
+        'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&q=80',
+        'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80',
+        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80',
+        'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&q=80',
+      ],
+      space: [
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80',
+        'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&q=80',
+        'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=800&q=80',
+        'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&q=80',
+        'https://images.unsplash.com/photo-1541873676-a18131494184?w=800&q=80',
+        'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80',
+      ],
+      crypto: [
+        'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=800&q=80',
+        'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80',
+        'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=800&q=80',
+        'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=800&q=80',
+        'https://images.unsplash.com/photo-1622630998477-20aa696ecb05?w=800&q=80',
+        'https://images.unsplash.com/photo-1591994843349-f415893b3a6b?w=800&q=80',
+      ],
+      gaming: [
+        'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80',
+        'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&q=80',
+        'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&q=80',
+        'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&q=80',
+        'https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=800&q=80',
+        'https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=800&q=80',
+      ],
+      global: [
+        'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80',
+        'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&q=80',
+        'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&q=80',
+        'https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?w=800&q=80',
+        'https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=800&q=80',
+      ],
     };
+
+    // Deterministic hash to pick a consistent image per article (based on URL)
+    function pickPlaceholder(category: string, seed: string): string {
+      const pool = PLACEHOLDER_POOLS[category] || PLACEHOLDER_POOLS['global'];
+      let hash = 0;
+      for (let i = 0; i < seed.length; i++) {
+        hash = (hash * 31 + seed.charCodeAt(i)) & 0xffffffff;
+      }
+      return pool[Math.abs(hash) % pool.length];
+    }
 
     for (const source of RSS_SOURCES) {
       try {
@@ -85,7 +152,7 @@ export async function GET(request: Request) {
             }
             
             if (!imageUrl) {
-              imageUrl = PLACEHOLDERS[autoCategory];
+              imageUrl = pickPlaceholder(autoCategory, item.link || item.title || '');
             }
 
             const article = await prisma.article.create({
