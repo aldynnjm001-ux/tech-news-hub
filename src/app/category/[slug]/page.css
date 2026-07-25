@@ -1,0 +1,58 @@
+.category-page {
+  padding-bottom: 4rem;
+}
+
+.category-header {
+  padding: 4rem 0;
+  background: linear-gradient(to right, rgba(37, 99, 235, 0.1), transparent);
+  margin-bottom: 2rem;
+}
+
+.category-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.category-subtitle {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+  overflow-x: auto;
+}
+
+.filter-label {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
