@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import './page.css';
 
 export const metadata: Metadata = {
   title: 'سياسة الخصوصية | أخبار التكنولوجيا',
