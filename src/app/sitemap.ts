@@ -4,18 +4,24 @@ import { prisma } from '@/lib/prisma';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://technewshub.com'; // In production, replace with actual domain
 
-  // Get all articles to generate individual URLs
-  const articles = await prisma.article.findMany({
-    select: { id: true, date: true },
-    orderBy: { date: 'desc' }
-  });
+  let articleEntries: MetadataRoute.Sitemap = [];
 
-  const articleEntries: MetadataRoute.Sitemap = articles.map((article) => ({
-    url: `${baseUrl}/article/${article.id}`,
-    lastModified: article.date,
-    changeFrequency: 'daily',
-    priority: 0.8,
-  }));
+  try {
+    // Get all articles to generate individual URLs
+    const articles = await prisma.article.findMany({
+      select: { id: true, date: true },
+      orderBy: { date: 'desc' }
+    });
+
+    articleEntries = articles.map((article) => ({
+      url: `${baseUrl}/article/${article.id}`,
+      lastModified: article.date,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    }));
+  } catch (error) {
+    console.warn("Could not fetch articles for sitemap. This is normal during Vercel build if DATABASE_URL is not set.");
+  }
 
   // Add static routes
   const staticRoutes: MetadataRoute.Sitemap = [
