@@ -30,7 +30,8 @@ export default function BreakingNewsBar() {
       </span>
       <div className="breaking-track-wrapper">
         <div className="breaking-track">
-          <span>{ticker}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ticker}</span>
+          <span className="ticker-content">{ticker}</span>
+          <span className="ticker-content">{ticker}</span>
         </div>
       </div>
       <style>{`
@@ -58,6 +59,7 @@ export default function BreakingNewsBar() {
           font-size: 0.8rem;
           letter-spacing: 0.05em;
           flex-shrink: 0;
+          z-index: 2;
         }
         .breaking-track-wrapper {
           flex: 1;
@@ -65,15 +67,21 @@ export default function BreakingNewsBar() {
           height: 100%;
           display: flex;
           align-items: center;
+          position: relative;
         }
         .breaking-track {
+          display: flex;
           white-space: nowrap;
-          animation: ticker 40s linear infinite;
-          padding-right: 100%;
+          width: fit-content;
+          animation: ticker-rtl 30s linear infinite;
         }
-        @keyframes ticker {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
+        .ticker-content {
+          padding-left: 50px;
+        }
+        /* In RTL, the content aligns to the right. We want it to move rightwards, meaning positive X translation */
+        @keyframes ticker-rtl {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(50%); }
         }
         @media (max-width: 768px) {
           .breaking-bar { font-size: 0.8rem; }
