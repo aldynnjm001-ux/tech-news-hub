@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import ArticleActions from "@/components/article-actions";
 import ArticleReactions from "@/components/article-reactions";
+import ArticleComments from "@/components/article-comments";
 import AdBanner from "@/components/ad-banner";
 import { Metadata } from "next";
 import "./page.css";
@@ -110,16 +111,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
             </ul>
           </div>
 
-          <div className="comments-section">
-            <h3>التعليقات (نظام تجريبي)</h3>
-            <div className="comment-form glass">
-              <textarea placeholder="أضف تعليقك هنا..." className="comment-input" rows={3}></textarea>
-              <button className="submit-btn">إرسال التعليق</button>
-            </div>
-            <div className="comments-list">
-              <p className="no-comments">كن أول من يعلق على هذا الخبر!</p>
-            </div>
-          </div>
+          <ArticleComments articleId={article.id} />
         </div>
 
         <aside className="article-sidebar">
