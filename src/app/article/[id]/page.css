@@ -28,6 +28,8 @@
   font-weight: 800;
   line-height: 1.3;
   margin-bottom: 1.5rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .article-meta {
@@ -265,6 +267,15 @@
 }
 @media (max-width: 768px) {
   .article-title {
-    font-size: 2rem;
+    font-size: 1.6rem;
+    line-height: 1.4;
+  }
+  .article-image-wrapper {
+    height: 250px;
+  }
+  .article-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
 }

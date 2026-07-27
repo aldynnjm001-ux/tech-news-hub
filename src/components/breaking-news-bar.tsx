@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Zap } from "lucide-react";
+import Link from "next/link";
 
 interface BreakingArticle {
   id: string;
@@ -20,7 +21,18 @@ export default function BreakingNewsBar() {
 
   if (articles.length === 0) return null;
 
-  const ticker = articles.map((a) => a.title).join("   ◈   ");
+  const TickerContent = () => (
+    <>
+      {articles.map((a, i) => (
+        <span key={a.id}>
+          <Link href={`/article/${a.id}`} className="breaking-link">
+            {a.title}
+          </Link>
+          <span className="breaking-separator">◈</span>
+        </span>
+      ))}
+    </>
+  );
 
   return (
     <div className="breaking-bar">
@@ -30,8 +42,8 @@ export default function BreakingNewsBar() {
       </span>
       <div className="breaking-track-wrapper">
         <div className="breaking-track">
-          <span className="ticker-content">{ticker}</span>
-          <span className="ticker-content">{ticker}</span>
+          <span className="ticker-content"><TickerContent /></span>
+          <span className="ticker-content"><TickerContent /></span>
         </div>
       </div>
       <style>{`
@@ -75,8 +87,25 @@ export default function BreakingNewsBar() {
           width: fit-content;
           animation: ticker-rtl 30s linear infinite;
         }
+        .breaking-track:hover {
+          animation-play-state: paused;
+        }
+        .breaking-link {
+          color: white;
+          text-decoration: none;
+          transition: opacity 0.2s;
+        }
+        .breaking-link:hover {
+          opacity: 0.8;
+          text-decoration: underline;
+        }
+        .breaking-separator {
+          margin: 0 1.5rem;
+          opacity: 0.5;
+          font-size: 0.7rem;
+        }
         .ticker-content {
-          padding-left: 50px;
+          padding-left: 0; /* padding handled by separator */
         }
         /* In RTL, the content aligns to the right. We want it to move rightwards, meaning positive X translation */
         @keyframes ticker-rtl {

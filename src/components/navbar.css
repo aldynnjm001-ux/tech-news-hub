@@ -183,4 +183,8 @@
   .navbar-brand h1 {
     font-size: 1.2rem;
   }
+  
+  .navbar-container {
+    gap: 0.5rem;
+  }
 }

@@ -21,6 +21,7 @@ const RSS_SOURCES = [
   { url: 'https://arabic.cnn.com/api/v1/rss/scitech/rss.xml', name: 'CNN بالعربية - علوم وتكنولوجيا' },
   { url: 'https://www.skynewsarabia.com/rss/technology', name: 'سكاي نيوز عربية - تكنولوجيا' },
   { url: 'https://www.alhurra.com/api/z$q_o_q_kvy', name: 'الحرة - علوم وتكنولوجيا' },
+  { url: 'https://ar.cointelegraph.com/rss', name: 'كوين تيليغراف - العملات الرقمية', forcedCategory: 'crypto' },
 ];
 
 
