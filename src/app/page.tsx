@@ -8,7 +8,7 @@ import PersonalizationModal from "@/components/personalization-modal";
 import AdBanner from "@/components/ad-banner";
 import { cookies } from "next/headers";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // Cache page for 1 hour to save Vercel usage
 
 function isNew(date: Date): boolean {
   const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
@@ -101,21 +101,7 @@ export default async function Home() {
               ))
             ) : (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', background: 'var(--glass-bg)', borderRadius: 'var(--radius)' }}>
-                <p style={{ marginBottom: '1rem', color: 'var(--muted)' }}>لا توجد أخبار حتى الآن. قم بتحديث قاعدة البيانات.</p>
-                <a 
-                  href="/api/fetch-news?force=true" 
-                  style={{
-                    display: 'inline-block',
-                    background: 'var(--primary)',
-                    color: 'white',
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    fontWeight: 'bold',
-                    boxShadow: 'var(--shadow-sm)'
-                  }}
-                >
-                  جلب آخر الأخبار الآن
-                </a>
+                <p style={{ marginBottom: '1rem', color: 'var(--muted)' }}>لا توجد أخبار حالياً. يرجى الانتظار حتى يتم جلب الأخبار الجديدة.</p>
               </div>
             )}
           </div>

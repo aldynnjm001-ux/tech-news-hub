@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
 
-// This is a simple implementation for parsing RSS
-// To run this endpoint securely, you should check for a secret token in headers or query params
-// For demonstration, we'll allow it to run directly.
+export const maxDuration = 60; // Set max duration for Vercel Hobby
 
 const parser = new Parser({
   customFields: {
@@ -39,10 +37,20 @@ function determineCategory(title: string, excerpt: string): string {
 
 export async function GET(request: Request) {
   try {
+    const authHeader = request.headers.get('authorization');
+    
+    // Validate CRON_SECRET on production
+    if (process.env.NODE_ENV !== 'development') {
+      if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        return new Response('Unauthorized', { status: 401 });
+      }
+    }
+
     const searchParams = new URL(request.url).searchParams;
     const force = searchParams.get('force') === 'true';
 
-    if (force) {
+    // Allow force deletion only in development to prevent data loss
+    if (force && process.env.NODE_ENV === 'development') {
       await prisma.article.deleteMany({});
     }
 
@@ -131,8 +139,8 @@ export async function GET(request: Request) {
       try {
         const feed = await parser.parseURL(source.url);
         
-        // Fetch up to 20 items from these rich sources
-        const topItems = feed.items.slice(0, 20);
+        // Fetch up to 5 items to avoid Vercel timeout on Hobby plan
+        const topItems = feed.items.slice(0, 5);
 
         for (const item of topItems) {
           const exists = await prisma.article.findUnique({
@@ -152,37 +160,7 @@ export async function GET(request: Request) {
               if (imgMatch) imageUrl = imgMatch[1];
             }
             
-            // Try fetching the original URL to get og:image and better description
-            if (item.link) {
-              try {
-                const res = await fetch(item.link, {
-                  headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
-                  signal: AbortSignal.timeout(3000)
-                });
-                const html = await res.text();
-                
-                if (!imageUrl) {
-                  const imgMatch = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i) || 
-                                   html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
-                  if (imgMatch) imageUrl = imgMatch[1];
-                }
-                
-                const descMatch = html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i) || 
-                                  html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:description["']/i);
-                if (descMatch && descMatch[1]) {
-                  const fetchedExcerpt = descMatch[1].trim();
-                  if (fetchedExcerpt.length > 20) {
-                     excerpt = fetchedExcerpt.substring(0, 150) + '...';
-                     // Update content to be the full og:description if content is missing or just a tiny snippet
-                     if (!item['content:encoded'] && (!item.content || item.content.length < 100)) {
-                         item.content = fetchedExcerpt;
-                     }
-                  }
-                }
-              } catch (e) {
-                // ignore fetch errors
-              }
-            }
+            // Removed HTML scraping step here to save execution time on Vercel
             
             if (!imageUrl) {
               imageUrl = pickPlaceholder(autoCategory, item.link || item.title || '');
