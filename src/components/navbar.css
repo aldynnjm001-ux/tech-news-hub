@@ -157,6 +157,23 @@
     display: flex;
   }
   
+  .navbar {
+    padding: 0.75rem 0;
+    min-height: 60px;
+  }
+
+  .navbar-container {
+    gap: 0.25rem;
+    overflow: hidden;
+  }
+
+  .navbar-brand h1 {
+    font-size: 1rem;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
   /* Mobile Menu Styles */
   .navbar-nav.mobile-open {
     display: flex;
@@ -172,6 +189,7 @@
     gap: 1rem;
     align-items: flex-start;
     animation: slideDown 0.2s ease forwards;
+    z-index: 100;
   }
   
   .navbar-nav.mobile-open .nav-link {
@@ -180,11 +198,11 @@
     border-bottom: 1px solid var(--border);
   }
   
-  .navbar-brand h1 {
-    font-size: 1.2rem;
+  .navbar-actions {
+    gap: 0.25rem;
   }
-  
-  .navbar-container {
-    gap: 0.5rem;
+
+  .icon-btn {
+    padding: 0.4rem;
   }
 }

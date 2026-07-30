@@ -1,5 +1,7 @@
 .home-page {
   padding-bottom: 4rem;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 .hero {
@@ -16,6 +18,7 @@
   line-height: 1.2;
   margin-bottom: 1.5rem;
   color: var(--foreground);
+  word-break: break-word;
 }
 
 .hero-subtitle {
@@ -70,8 +73,8 @@
 
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: 1.5rem;
 }
 
 .news-card {
@@ -142,8 +145,29 @@
 }
 
 @media (max-width: 768px) {
+  .hero {
+    padding: 3rem 0 2rem;
+  }
+
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 1.85rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .news-title {
+    font-size: 1.1rem;
   }
 }
 
@@ -269,5 +293,20 @@
   }
   .trending-sidebar {
     position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .news-content {
+    padding: 1rem;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
   }
 }
