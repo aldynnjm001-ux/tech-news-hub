@@ -5,8 +5,32 @@ import Image from "next/image";
 import "./page.css";
 
 import Pagination from "@/components/pagination";
+import { Metadata } from "next";
 
 export const revalidate = 3600;
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug as keyof typeof categories;
+  const categoryName = categories[slug];
+
+  if (!categoryName) {
+    return { title: 'القسم غير موجود' };
+  }
+
+  return {
+    title: `${categoryName} | أخبار التكنولوجيا`,
+    description: `أحدث الأخبار والتطورات التقنية في قسم ${categoryName}`,
+    openGraph: {
+      title: `${categoryName} | أخبار التكنولوجيا`,
+      description: `أحدث الأخبار والتطورات التقنية في قسم ${categoryName}`,
+    },
+    twitter: {
+      title: `${categoryName} | أخبار التكنولوجيا`,
+      description: `أحدث الأخبار والتطورات التقنية في قسم ${categoryName}`,
+    }
+  };
+}
 
 export default async function CategoryPage({ 
   params,

@@ -186,10 +186,29 @@ export async function GET(request: Request) {
       }
     }
 
+    // Cleanup old articles (older than 60 days) to save database space
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+    
+    let deletedOldArticles = 0;
+    try {
+      const deleteResult = await prisma.article.deleteMany({
+        where: {
+          date: {
+            lt: sixtyDaysAgo
+          }
+        }
+      });
+      deletedOldArticles = deleteResult.count;
+    } catch (e) {
+      console.error("Failed to cleanup old articles:", e);
+    }
+
     return NextResponse.json({ 
       success: true, 
-      message: `تم جلب وإضافة ${newArticles.length} مقالات جديدة بنجاح.`,
+      message: `تم جلب وإضافة ${newArticles.length} مقالات جديدة بنجاح. وتم حذف ${deletedOldArticles} مقال قديم.`,
       addedArticles: newArticles.length,
+      deletedArticles: deletedOldArticles,
       errors 
     });
 
