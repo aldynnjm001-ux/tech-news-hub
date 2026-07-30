@@ -4,19 +4,44 @@ import Link from "next/link";
 import Image from "next/image";
 import "./page.css";
 
-export const dynamic = 'force-dynamic';
+import Pagination from "@/components/pagination";
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+export const revalidate = 3600;
+
+export default async function CategoryPage({ 
+  params,
+  searchParams
+}: { 
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
   const slug = resolvedParams.slug as keyof typeof categories;
   const categoryName = categories[slug];
   
+  const page = Number(resolvedSearchParams.page) || 1;
+  const filter = resolvedSearchParams.filter === 'popular' ? 'popular' : 'recent';
+  const ITEMS_PER_PAGE = 12;
+  
   let articles: any[] = [];
+  let totalArticles = 0;
+  
   try {
-    articles = await prisma.article.findMany({
-      where: { category: slug },
-      orderBy: { date: 'desc' },
-    });
+    const where = { category: slug };
+    
+    const [fetchedArticles, count] = await Promise.all([
+      prisma.article.findMany({
+        where,
+        orderBy: filter === 'popular' ? { viewCount: 'desc' } : { date: 'desc' },
+        skip: (page - 1) * ITEMS_PER_PAGE,
+        take: ITEMS_PER_PAGE,
+      }),
+      prisma.article.count({ where })
+    ]);
+    
+    articles = fetchedArticles;
+    totalArticles = count;
   } catch (e) {
     console.error("Database connection failed", e);
   }
@@ -37,8 +62,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <div className="container">
         <div className="filter-bar glass">
           <span className="filter-label">تصفية:</span>
-          <button className="filter-btn active">الأحدث (آخر شهرين)</button>
-          <button className="filter-btn">الأكثر قراءة</button>
+          <Link href={`/category/${slug}?filter=recent`} className={`filter-btn ${filter === 'recent' ? 'active' : ''}`}>الأحدث</Link>
+          <Link href={`/category/${slug}?filter=popular`} className={`filter-btn ${filter === 'popular' ? 'active' : ''}`}>الأكثر قراءة</Link>
         </div>
 
         <div className="news-grid">
@@ -65,6 +90,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           ) : (
             <p>لا توجد أخبار حالياً في هذا القسم.</p>
           )}
+        </div>
+        
+        <div style={{ marginTop: '3rem' }}>
+          <Pagination 
+            currentPage={page} 
+            totalPages={Math.ceil(totalArticles / ITEMS_PER_PAGE)} 
+            basePath={`/category/${slug}`}
+            queryParams={`filter=${filter}`}
+          />
         </div>
       </div>
     </div>

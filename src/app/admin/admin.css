@@ -1,0 +1,141 @@
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.admin-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--foreground);
+}
+
+.logout-btn {
+  background: var(--destructive);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.login-form {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.login-form h2 {
+  margin-bottom: 1.5rem;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 0.5rem;
+}
+
+.admin-section {
+  margin-bottom: 3rem;
+}
+
+.admin-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 1rem;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-table th {
+  background-color: var(--muted);
+  font-weight: 700;
+}
+
+.action-btn {
+  padding: 0.25rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+}
+
+.action-btn.delete {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+.action-btn.delete:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.action-btn.read {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+.action-btn.read:hover {
+  background: #22c55e;
+  color: white;
+}
+
+.unread-row {
+  background: rgba(var(--primary-rgb), 0.05);
+  font-weight: 600;
+}
