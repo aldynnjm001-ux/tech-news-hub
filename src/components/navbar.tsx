@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "./theme-provider";
-import { Moon, Sun, Search, Menu, X, Bookmark } from "lucide-react";
+import { Moon, Sun, Search, Menu, X, Bookmark, ArrowUp } from "lucide-react";
 import NotificationsBell from "./notifications-bell";
 import "./navbar.css";
 
@@ -16,6 +16,19 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const isActive = (path: string) => pathname?.includes(path);
 
@@ -101,6 +114,32 @@ export default function Navbar() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Mobile Categories Quick Nav */}
+      <div className="mobile-categories-bar hidden-desktop">
+        <div className="mobile-categories-scroll">
+          <Link href="/category/ai" className={`mobile-cat-btn ${pathname?.includes('/category/ai') ? 'active' : ''}`}>🤖 الذكاء الاصطناعي</Link>
+          <Link href="/category/cybersecurity" className={`mobile-cat-btn ${pathname?.includes('/category/cybersecurity') ? 'active' : ''}`}>🔒 الأمن السيبراني</Link>
+          <Link href="/category/hardware" className={`mobile-cat-btn ${pathname?.includes('/category/hardware') ? 'active' : ''}`}>💻 العتاد</Link>
+          <Link href="/category/software" className={`mobile-cat-btn ${pathname?.includes('/category/software') ? 'active' : ''}`}>⚙️ البرمجيات</Link>
+          <Link href="/category/space" className={`mobile-cat-btn ${pathname?.includes('/category/space') ? 'active' : ''}`}>🚀 الفضاء</Link>
+          <Link href="/category/crypto" className={`mobile-cat-btn ${pathname?.includes('/category/crypto') ? 'active' : ''}`}>🪙 العملات</Link>
+          <Link href="/category/gaming" className={`mobile-cat-btn ${pathname?.includes('/category/gaming') ? 'active' : ''}`}>🎮 الألعاب</Link>
+          <Link href="/category/global" className={`mobile-cat-btn ${pathname?.includes('/category/global') ? 'active' : ''}`}>🌐 تقنيات عالمية</Link>
+        </div>
+      </div>
+
+      {/* Scroll To Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="scroll-to-top-btn"
+          aria-label="العودة لأعلى الصفحة"
+          title="العودة لأعلى"
+        >
+          <ArrowUp size={20} />
+        </button>
       )}
     </header>
   );
